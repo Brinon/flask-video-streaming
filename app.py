@@ -2,6 +2,8 @@
 from importlib import import_module
 import os
 from flask import Flask, render_template, Response
+import cv2
+import numpy as np
 
 # import camera driver
 if os.environ.get('CAMERA'):
@@ -25,6 +27,11 @@ def gen(camera):
     """Video streaming generator function."""
     while True:
         frame = camera.get_frame()
+
+        img = cv2.imdecode(np.fromstring(frame, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        print(img.shape)
+        # maybe decode and preprocess frame
+
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
