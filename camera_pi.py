@@ -23,10 +23,9 @@ class Camera(BaseCamera):
       stream = np.empty(CAMERA_RESOLUTION + (3,), np.uint8)
       stream = io.BytesIO()
       for _ in camera.capture_continuous(stream, 'jpeg', use_video_port=True):
-	# return current frame
-	stream.seek(0)
-	frame_stream = stream.read()
-	frame_array = cv2.imdecode(np.fromstring( frame_stream, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
-	yield frame_array 
-	stream.seek(0) 
-	stream.truncate()
+        stream.seek(0)
+        frame_stream = stream.read()
+        frame_array = cv2.imdecode(np.fromstring( frame_stream, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        yield frame_array 
+        stream.seek(0) 
+        stream.truncate()

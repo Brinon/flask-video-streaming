@@ -31,10 +31,9 @@ def gen(camera):
   """Video streaming generator function."""
   while True:
     frame_arr = camera.get_frame()
-    print(f'frame shape: {frame_arr.shape}')
-    frame = cv2.imencode('.jpeg', frame_arr)
+    _, arr = frame = cv2.imencode('.jpeg', frame_arr)
 
-    yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + arr.tostring() + b'\r\n')
 
 
 @app.route('/video_feed')
@@ -46,9 +45,9 @@ def video_feed():
 @app.route('/frame')
 def frame():
   """ returns the latest frame as a str """
-  frame_str = Camera().get_frame()
-  return jsonify({'frame': frame_str.tostring(), 'encoding': 'jpeg'})
-
+  frame_arr = Camera().get_frame()
+  _, arr = frame = cv2.imencode('.jpeg', frame_arr)
+  return Response(arr.tostring(), mimetype='image/jpeg')
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', threaded=True)
