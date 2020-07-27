@@ -30,11 +30,9 @@ def last_frame():
 def gen(camera):
   """Video streaming generator function."""
   while True:
-    frame = camera.get_frame()
-
-    img = cv2.imdecode(np.fromstring(frame, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
-    print(img.shape)
-    # maybe decode and preprocess frame
+    frame_arr = camera.get_frame()
+    print(f'frame shape: {frame_arr.shape}')
+    frame = cv2.imencode('.jpeg', frame_arr)
 
     yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -49,7 +47,7 @@ def video_feed():
 def frame():
   """ returns the latest frame as a str """
   frame_str = Camera().get_frame()
-  return jsonify({'frame': frame_str, 'encoding': 'jpeg'})
+  return jsonify({'frame': frame_str.tostring(), 'encoding': 'jpeg'})
 
 
 if __name__ == '__main__':
