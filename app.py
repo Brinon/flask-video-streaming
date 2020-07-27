@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 
 # import camera driver
-if os.environ.get('CAMERA'):
+if os.environ.get('CAMERA', 'pi'):
   Camera = import_module('camera_' + os.environ['CAMERA']).Camera
 else:
   from camera import Camera

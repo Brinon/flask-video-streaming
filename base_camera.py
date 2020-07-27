@@ -78,6 +78,8 @@ class BaseCamera(object):
         BaseCamera.event.wait()
         BaseCamera.event.clear()
 
+        current_frame = BaseCamera.frame
+
         return BaseCamera.frame
 
     @staticmethod
